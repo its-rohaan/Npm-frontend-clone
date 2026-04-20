@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Spotify Clone (Local)</title>
+
+<style>
+body {
+  background: #121212;
+  color: white;
+  font-family: Arial;
+}
+
+.container {
+  width: 400px;
+  margin: 50px auto;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 25px;
+  border: none;
+  background: #242424;
+  color: white;
+  outline: none;
+}
+
+.results {
+  margin-top: 10px;
+}
+
+.item {
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.item:hover {
+  background: #282828;
+}
+
+/* Player box */
+.player-box {
+  margin-top: 20px;
+  display: none;
+  position: relative;
+  background: #181818;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+/* Close button INSIDE player */
+.close-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  cursor: pointer;
+  font-weight: bold;
+  line-height: 26px;
+}
+
+/* Audio styling */
+audio {
+  width: 100%;
+  margin-top: 25px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <input type="text" placeholder="Search songs..." onkeyup="searchSongs()">
+  <div class="results" id="results"></div>
+
+  <!-- Player -->
+  <div class="player-box" id="playerBox">
+    <button class="close-btn" onclick="closePlayer()">×</button>
+    <audio id="player" controls></audio>
+  </div>
+</div>
+
+<script>
+const songs = [
+  {
+    name: "Blinding Lights",
+    artist: "The Weeknd",
+    file: "song.mp3"
+  },
+  {
+    name: "Shape of You",
+    artist: "Ed Sheeran",
+    file: "songs/shapeofyou.mp3"
+  }
+];
+
+function searchSongs() {
+  let input = document.querySelector("input").value.toLowerCase();
+  let results = document.getElementById("results");
+  let playerBox = document.getElementById("playerBox");
+  let player = document.getElementById("player");
+
+  results.innerHTML = "";
+
+  if (input === "") {
+    player.pause();
+    player.src = "";
+    playerBox.style.display = "none";
+    return;
+  }
+
+  let filtered = songs.filter(song =>
+    song.name.toLowerCase().includes(input) ||
+    song.artist.toLowerCase().includes(input)
+  );
+
+  filtered.forEach(song => {
+    let div = document.createElement("div");
+    div.classList.add("item");
+    div.innerText = song.name + " - " + song.artist;
+
+    div.onclick = () => playSong(song.file);
+
+    results.appendChild(div);
+  });
+}
+
+function playSong(file) {
+  let player = document.getElementById("player");
+  let playerBox = document.getElementById("playerBox");
+
+  player.src = file;
+  playerBox.style.display = "block";
+  player.play();
+}
+
+function closePlayer() {
+  let player = document.getElementById("player");
+  let playerBox = document.getElementById("playerBox");
+
+  player.pause();
+  player.src = "";
+  playerBox.style.display = "none";
+}
+</script>
+
+</body>
+</html>
